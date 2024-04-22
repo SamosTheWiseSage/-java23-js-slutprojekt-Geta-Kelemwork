@@ -11,6 +11,8 @@ const PopularMovies = document.querySelector('.PopularMovies');
 const SearchMovies = document.querySelector('.SearchMovies');
 const ErrorMessage = document.querySelector('.ErrorMessage');
 const form = document.querySelector('form');
+const topMovieButton = document.querySelector('#topMovieButton');
+const popularMovieButton = document.querySelector('#popularMovieButton');
 
 const options = {
   method: 'GET',
@@ -42,8 +44,41 @@ fetch('https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1', opti
   })
   .catch(err => console.error(err));
 
+topMovieButton.addEventListener('click', event => {
+  event.preventDefault();
+  popularContainer.innerHTML = ''
+TopRated.classList.remove('hiddenClass');
+SearchMovies.classList.add('hiddenClass');
+console.log('hhhhhwjhduewdhwbfuwbdhbhwbduwbduwbdwbudbu')
+ })
+
+popularMovieButton.addEventListener('click', event=>{
+  event.preventDefault();  
+  popularContainer.innerHTML = ''
+  TopRated.classList.add('hiddenClass');
+  PopularMovies.classList.remove('hiddenClass');
+  fetch(`https://api.themoviedb.org/3/movie/popular?language=en-US&page=1`, options)
+  .then(response => response.json())
+  .then(b => {
+    console.log(b)
+    const popular = b.results; 
+  
+    for (let i = 0; i < popular.length; i++) {
+const popmovie = document.createElement('p')
+      popmovie.innerHTML = popular[i].title
+      const img = document.createElement('img');
+          img.src = `https://image.tmdb.org/t/p/w500/` + popular[i].poster_path
+      popularContainer.append(popmovie,img)
+     
+    }
+
+  })
+})
+
+
 form.addEventListener('submit', event => {
   event.preventDefault();//${searchTerm}
+  searchContainer.innerHTML = ''
   TopRated.classList.add('hiddenClass');
   const searchTerm = document.querySelector('input').value;
   const searchType = document.querySelector('select').value;
@@ -57,12 +92,20 @@ form.addEventListener('submit', event => {
       .then(response => response.json())
       .then(y => {
         console.log(y)
+        SearchMovies.classList.remove('hiddenClass')
         const searchText = y.results
-        for (let i = 19; i < searchText.length; i++) {
+        for (let i = 0; i < searchText.length; i++) {
           console.log(searchText[i].title)
           const searchTime = document.createElement('p');
           searchTime.innerHTML = searchText[i].title
-          searchContainer.append(searchTime)
+          const img = document.createElement('img');
+          img.src = `https://image.tmdb.org/t/p/w500/` + searchText[i].poster_path
+         searchContainer.append(searchTime,img)
+         if (searchText[i].poster_path == null) {
+          const img = document.createElement('img');
+          img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019'
+          searchContainer.append(searchTime,img)
+         }
         }
         console.log(searchText)
       })
@@ -72,14 +115,23 @@ form.addEventListener('submit', event => {
     fetch(`https://api.themoviedb.org/3/search/person?query=${searchTerm}&include_adult=false&language=en-US&page=1`, options)
   .then(response => response.json())
   .then(z => {
+    SearchMovies.classList.remove('hiddenClass')
     console.log(z)
+    let i;
     const searchActor = z.results
-    for (let i = 0; i < searchActor.length; i++) {
-      console.log(searchActor[i].known_for[0].title)
+    for (i = 0; i < searchActor[0].known_for.length; i++) {
+      console.log(searchActor[0].known_for[i].title)
       const actorTime = document.createElement('p');
-      actorTime.innerHTML = searchActor[i].known_for
-      searchContainer.append(actorTime)
+      actorTime.innerHTML = searchActor[0].known_for[i].title
+      //searchContainer.append(actorTime)
       console.log(actorTime)
+            const img = document.createElement('img');
+      img.src = `https://image.tmdb.org/t/p/w500/` + searchActor[0].known_for[i].poster_path
+     searchContainer.append(actorTime,img)
+     if (searchActor[0].known_for[i].poster_path == null) {
+      const img = document.createElement('img');
+      img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019'
+     }
     }
     console.log(searchActor)
   })

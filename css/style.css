@@ -1,15 +1,19 @@
-.TopRated{
+.TopRated {
     display: block;
 }
-.PopularMovies{
+
+.PopularMovies {
     display: block;
 }
-.SearchMovies{
+
+.SearchMovies {
     display: block;
 }
-.ErrorMessage{
+
+.ErrorMessage {
     display: block;
 }
-.hiddenClass{
+
+.hiddenClass {
     display: none;
 }
