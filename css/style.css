@@ -1,0 +1,15 @@
+.TopRated{
+    display: block;
+}
+.PopularMovies{
+    display: block;
+}
+.SearchMovies{
+    display: block;
+}
+.ErrorMessage{
+    display: block;
+}
+.hiddenClass{
+    display: none;
+}
