@@ -55,6 +55,7 @@ console.log('hhhhhwjhduewdhwbfuwbdhbhwbduwbduwbdwbudbu')
 popularMovieButton.addEventListener('click', event=>{
   event.preventDefault();  
   popularContainer.innerHTML = ''
+  searchContainer.innerHTML = ''
   TopRated.classList.add('hiddenClass');
   PopularMovies.classList.remove('hiddenClass');
   fetch(`https://api.themoviedb.org/3/movie/popular?language=en-US&page=1`, options)
@@ -79,6 +80,7 @@ const popmovie = document.createElement('p')
 form.addEventListener('submit', event => {
   event.preventDefault();//${searchTerm}
   searchContainer.innerHTML = ''
+  popularContainer.innerHTML = ''
   TopRated.classList.add('hiddenClass');
   const searchTerm = document.querySelector('input').value;
   const searchType = document.querySelector('select').value;
