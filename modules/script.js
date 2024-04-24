@@ -26,6 +26,7 @@ fetch('https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1', opti
   .then(response => response.json())
   .then(x => {
     console.log(x)
+    errorContainer.innerHTML = '';
     const topmovie = x.results
     PopularMovies.classList.add('hiddenClass');
     SearchMovies.classList.add('hiddenClass');
@@ -34,46 +35,49 @@ fetch('https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1', opti
       const movietime = document.createElement('p')
       movietime.innerText = topmovie[i].title
       //movieContainer.append(movietime);
-
+      const movieReleaseDate = document.createElement('p');
+      movieReleaseDate.innerHTML = topmovie[i].release_date
       const img = document.createElement('img');
       img.src = `https://image.tmdb.org/t/p/w500/` + topmovie[i].poster_path
-      movieContainer.append(movietime, img)
+      movieContainer.append(movietime, movieReleaseDate, img)
     }
 
     // document.body.append( JSON.stringify(topmovie[0]))
   })
-  .catch(err => console.error(err));
+  .catch(displayError);
 
 topMovieButton.addEventListener('click', event => {
   event.preventDefault();
   popularContainer.innerHTML = ''
-TopRated.classList.remove('hiddenClass');
-SearchMovies.classList.add('hiddenClass');
-console.log('hhhhhwjhduewdhwbfuwbdhbhwbduwbduwbdwbudbu')
- })
+  TopRated.classList.remove('hiddenClass');
+  SearchMovies.classList.add('hiddenClass');
+  console.log('hhhhhwjhduewdhwbfuwbdhbhwbduwbduwbdwbudbu')
+  displayError();
+})
 
-popularMovieButton.addEventListener('click', event=>{
-  event.preventDefault();  
+popularMovieButton.addEventListener('click', event => {
+  event.preventDefault();
   popularContainer.innerHTML = ''
   searchContainer.innerHTML = ''
   TopRated.classList.add('hiddenClass');
   PopularMovies.classList.remove('hiddenClass');
   fetch(`https://api.themoviedb.org/3/movie/popular?language=en-US&page=1`, options)
-  .then(response => response.json())
-  .then(b => {
-    console.log(b)
-    const popular = b.results; 
-  
-    for (let i = 0; i < popular.length; i++) {
-const popmovie = document.createElement('p')
-      popmovie.innerHTML = popular[i].title
-      const img = document.createElement('img');
-          img.src = `https://image.tmdb.org/t/p/w500/` + popular[i].poster_path
-      popularContainer.append(popmovie,img)
-     
-    }
+    .then(response => response.json())
+    .then(b => {
+      console.log(b)
+      const popular = b.results;
+      errorContainer.innerHTML = '';
+      for (let i = 0; i < popular.length; i++) {
+        const popmovie = document.createElement('p')
+        popmovie.innerHTML = popular[i].title
+        const img = document.createElement('img');
+        img.src = `https://image.tmdb.org/t/p/w500/` + popular[i].poster_path
+        popularContainer.append(popmovie, img)
 
-  })
+      }
+
+    })
+    .catch(displayError)
 })
 
 
@@ -85,58 +89,116 @@ form.addEventListener('submit', event => {
   const searchTerm = document.querySelector('input').value;
   const searchType = document.querySelector('select').value;
   console.log(searchTerm)
-  // const url = `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&include_adult=false&language=en-US&page=1&api_key=${API_KEY}`;
-  //console.log(url);
+  // this is the search if statments for a fetch
   if (searchType == "title") {
-    //const url = `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&include_adult=false&language=en-US&page=1&api_key=${API_KEY}`;
-    //console.log("hello babrie")
     fetch(`https://api.themoviedb.org/3/search/movie?query=${searchTerm}&include_adult=false&language=en-US&page=1`, options)
       .then(response => response.json())
       .then(y => {
         console.log(y)
+        if (y.results.length == 0 ) {
+          // displayError();
+          throw new Error('Not found')
+        }
+        errorContainer.innerHTML = '';
         SearchMovies.classList.remove('hiddenClass')
         const searchText = y.results
         for (let i = 0; i < searchText.length; i++) {
           console.log(searchText[i].title)
           const searchTime = document.createElement('p');
           searchTime.innerHTML = searchText[i].title
+          const searchDate = document.createElement('p');
+          searchDate.innerHTML = searchText[i].release_date
+          console.log(searchText[i].release_date)
+          const searchOverview = document.createElement('p');
+          searchOverview.innerHTML = searchText[i].overview
           const img = document.createElement('img');
           img.src = `https://image.tmdb.org/t/p/w500/` + searchText[i].poster_path
-         searchContainer.append(searchTime,img)
-         if (searchText[i].poster_path == null) {
-          const img = document.createElement('img');
-          img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019'
-          searchContainer.append(searchTime,img)
-         }
+          searchContainer.append(searchTime, searchDate, searchOverview, img,)
+          if (searchText[i].poster_path == null) {
+            img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019'
+            searchContainer.append(searchTime, searchOverview, searchDate, img)
+          }
         }
         console.log(searchText)
       })
-      .catch(err => console.error(err));
+      .catch(displayError);
   }
   if (searchType == "actor") {
     fetch(`https://api.themoviedb.org/3/search/person?query=${searchTerm}&include_adult=false&language=en-US&page=1`, options)
-  .then(response => response.json())
-  .then(z => {
-    SearchMovies.classList.remove('hiddenClass')
-    console.log(z)
-    let i;
-    const searchActor = z.results
-    for (i = 0; i < searchActor[0].known_for.length; i++) {
-      console.log(searchActor[0].known_for[i].title)
-      const actorTime = document.createElement('p');
-      actorTime.innerHTML = searchActor[0].known_for[i].title
-      //searchContainer.append(actorTime)
-      console.log(actorTime)
+      .then(response => response.json())
+      .then(z => {
+        SearchMovies.classList.remove('hiddenClass')
+        errorContainer.innerHTML = '';
+        console.log(z)
+        const searchActor = z.results
+        const actorTime = document.createElement('p');
+        actorTime.innerHTML = 'name: ' + searchActor[0].name
+        const actorDep = document.createElement('p');
+        actorDep.innerHTML = 'Job Department: ' + searchActor[0].known_for_department
+        searchContainer.append(actorTime, actorDep)
+        for (let i = 0; i < searchActor[0].known_for.length; i++) {
+          console.log(searchActor[0].known_for[i].title)
+          const mediaType = document.createElement('p')
+          mediaType.innerHTML = searchActor[0].known_for[i].media_type + ': ' + searchActor[0].known_for[i].title;
+          if (searchActor[0].known_for[i].title == null) {
+            mediaType.innerHTML = searchActor[0].known_for[i].media_type + ': ' + searchActor[0].known_for[i].name;
+          }
+
+
+
+
+          searchContainer.append(mediaType)
+
+
+          if (searchActor[0].known_for[i].poster_path == null) {
             const img = document.createElement('img');
-      img.src = `https://image.tmdb.org/t/p/w500/` + searchActor[0].known_for[i].poster_path
-     searchContainer.append(actorTime,img)
-     if (searchActor[0].known_for[i].poster_path == null) {
-      const img = document.createElement('img');
-      img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019'
-     }
-    }
-    console.log(searchActor)
-  })
-  .catch(err => console.error(err));
+            img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019'
+            searchContainer.append(mediaType)
+            searchContainer.append(actorTime)
+            searchContainer.append(actorDep)
+            searchContainer.append(img)
+          }
+        } const actorImg = document.createElement('img');
+        actorImg.src = `https://image.tmdb.org/t/p/w500/` + searchActor[0].profile_path
+        searchContainer.append(actorImg)
+        console.log(searchActor)
+      })
+      .catch(displayError);
+
   }
-}) 
+})
+
+function displayError(error) {
+ 
+if ( error == "Error: Not found") {
+  const errorEl = document.createElement('h1');
+  errorContainer.innerText = ""
+  movieContainer.innerText = ""
+  errorContainer.append(errorEl);
+} else if (error == "TypeError: Failed to fetch") {
+    console.log('ejfklwnfljkwnfkljnsljkvnwsjklvwejklfnweljk')
+
+    console.log(error)
+
+    const errorEl = document.createElement('h1');
+    errorContainer.innerText = ""
+    movieContainer.innerText = ""
+    errorEl.innerText = "network Error/server timeout. please check Wi-fi connection or try again later."
+    errorContainer.append(errorEl);
+  } else if (error == "TypeError: Cannot read properties of undefined (reading 'name')") {
+    console.log(error)
+
+    const errorEl = document.createElement('h1');
+    errorContainer.innerText = ""
+    movieContainer.innerText = ""
+    errorEl.innerText = "search not found in database. please check your spelling and try again"
+    errorContainer.append(errorEl);
+
+  } else{
+    const errorEl = document.createElement('h1');
+    errorContainer.innerText = ""
+    movieContainer.innerText = ''
+    errorEl.innerText = error.message
+    errorContainer.append(errorEl);
+  }
+}
