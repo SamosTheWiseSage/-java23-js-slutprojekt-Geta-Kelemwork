@@ -175,7 +175,7 @@ if ( error == "Error: Not found") {
   errorContainer.innerText = ""
   movieContainer.innerText = ""
   errorContainer.append(errorEl);
-} else if (error == "TypeError: Failed to fetch") {
+} if (error == "TypeError: Failed to fetch") {
     console.log('ejfklwnfljkwnfkljnsljkvnwsjklvwejklfnweljk')
 
     console.log(error)
@@ -185,7 +185,7 @@ if ( error == "Error: Not found") {
     movieContainer.innerText = ""
     errorEl.innerText = "network Error/server timeout. please check Wi-fi connection or try again later."
     errorContainer.append(errorEl);
-  } else if (error == "TypeError: Cannot read properties of undefined (reading 'name')") {
+  }  if (error == "TypeError: Cannot read properties of undefined (reading 'name')") {
     console.log(error)
 
     const errorEl = document.createElement('h1');
@@ -197,7 +197,7 @@ if ( error == "Error: Not found") {
   } else{
     const errorEl = document.createElement('h1');
     errorContainer.innerText = ""
-    movieContainer.innerText = ''
+    movieContainer.innerText = ""
     errorEl.innerText = error.message
     errorContainer.append(errorEl);
   }
