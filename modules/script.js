@@ -52,7 +52,6 @@ topMovieButton.addEventListener('click', event => {
   TopRated.classList.remove('hiddenClass');
   SearchMovies.classList.add('hiddenClass');
   console.log('hhhhhwjhduewdhwbfuwbdhbhwbduwbduwbdwbudbu')
-  displayError();
 })
 
 popularMovieButton.addEventListener('click', event => {
@@ -173,7 +172,6 @@ function displayError(error) {
 if ( error == "Error: Not found") {
   const errorEl = document.createElement('h1');
   errorContainer.innerText = ""
-  movieContainer.innerText = ""
   errorContainer.append(errorEl);
 } if (error == "TypeError: Failed to fetch") {
     console.log('ejfklwnfljkwnfkljnsljkvnwsjklvwejklfnweljk')
@@ -182,7 +180,6 @@ if ( error == "Error: Not found") {
 
     const errorEl = document.createElement('h1');
     errorContainer.innerText = ""
-    movieContainer.innerText = ""
     errorEl.innerText = "network Error/server timeout. please check Wi-fi connection or try again later."
     errorContainer.append(errorEl);
   }  if (error == "TypeError: Cannot read properties of undefined (reading 'name')") {
@@ -190,14 +187,12 @@ if ( error == "Error: Not found") {
 
     const errorEl = document.createElement('h1');
     errorContainer.innerText = ""
-    movieContainer.innerText = ""
     errorEl.innerText = "search not found in database. please check your spelling and try again"
     errorContainer.append(errorEl);
 
   } else{
     const errorEl = document.createElement('h1');
     errorContainer.innerText = ""
-    movieContainer.innerText = ""
     errorEl.innerText = error.message
     errorContainer.append(errorEl);
   }
