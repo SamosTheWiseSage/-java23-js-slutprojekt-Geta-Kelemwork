@@ -69,14 +69,16 @@ popularMovieButton.addEventListener('click', event => {
       for (let i = 0; i < popular.length; i++) {
         const popmovie = document.createElement('p')
         popmovie.innerHTML = popular[i].title
+        const popularReleaseDate = document.createElement('p');
+        popularReleaseDate.innerHTML = popular[i].release_date
         const img = document.createElement('img');
         img.src = `https://image.tmdb.org/t/p/w500/` + popular[i].poster_path
-        popularContainer.append(popmovie, img)
+        popularContainer.append(popmovie,popularReleaseDate, img)
 
       }
 
     })
-    .catch(displayError)
+    // .catch(displayError)
 })
 
 
@@ -130,17 +132,23 @@ form.addEventListener('submit', event => {
         errorContainer.innerHTML = '';
         console.log(z)
         const searchActor = z.results
-        const actorTime = document.createElement('p');
-        actorTime.innerHTML = 'name: ' + searchActor[0].name
+
+      
+       for (let i = 0; i < searchActor.length; i++) {
+        
+        const actorTime = document.createElement('p'); 
         const actorDep = document.createElement('p');
-        actorDep.innerHTML = 'Job Department: ' + searchActor[0].known_for_department
+        
+        actorTime.innerHTML = 'name: ' + searchActor[i].name
+       
+        actorDep.innerHTML = 'Job Department: ' + searchActor[i].known_for_department
         searchContainer.append(actorTime, actorDep)
-        for (let i = 0; i < searchActor[0].known_for.length; i++) {
-          console.log(searchActor[0].known_for[i].title)
+        for (let ir = 0; ir < searchActor[i].known_for.length; ir++) {
+          console.log(searchActor[i].known_for[ir].title)
           const mediaType = document.createElement('p')
-          mediaType.innerHTML = searchActor[0].known_for[i].media_type + ': ' + searchActor[0].known_for[i].title;
-          if (searchActor[0].known_for[i].title == null) {
-            mediaType.innerHTML = searchActor[0].known_for[i].media_type + ': ' + searchActor[0].known_for[i].name;
+          mediaType.innerHTML = searchActor[i].known_for[ir].media_type + ': ' + searchActor[i].known_for[ir].title;
+          if (searchActor[i].known_for[ir].title == null) {
+            mediaType.innerHTML = searchActor[i].known_for[ir].media_type + ': ' + searchActor[i].known_for[ir].name;
           }
 
 
@@ -149,18 +157,21 @@ form.addEventListener('submit', event => {
           searchContainer.append(mediaType)
 
 
-          if (searchActor[0].known_for[i].poster_path == null) {
-            const img = document.createElement('img');
-            img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019'
-            searchContainer.append(mediaType)
-            searchContainer.append(actorTime)
-            searchContainer.append(actorDep)
-            searchContainer.append(img)
-          }
-        } const actorImg = document.createElement('img');
-        actorImg.src = `https://image.tmdb.org/t/p/w500/` + searchActor[0].profile_path
+          
+        }     const actorImg = document.createElement('img');
+        actorImg.src = `https://image.tmdb.org/t/p/w500/` + searchActor[i].profile_path
         searchContainer.append(actorImg)
         console.log(searchActor)
+        if (searchActor[i].profile_path == null) {
+            const img = document.createElement('img');
+            img.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/660px-No-Image-Placeholder.svg.png?20200912122019'
+            // searchContainer.append(mediaType)
+            // searchContainer.append(actorTime)
+            // searchContainer.append(actorDep)
+            searchContainer.append(img)
+          }
+       } 
+    
       })
       .catch(displayError);
 
